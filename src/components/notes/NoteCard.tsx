@@ -10,7 +10,7 @@ interface Props {
 }
 
 export default function NoteCard({ note, onArchive, onDelete, onEdit, onView }: Props) {
-    // Formateo de fecha limpio
+    // Clean date formatting
     const dateStr = new Date(note.lastModifiedDate || Date.now()).toLocaleDateString();
 
     return (

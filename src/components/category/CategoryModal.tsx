@@ -6,7 +6,7 @@ import NotificationService from "../../utils/notificationsService";
 interface Props {
     show: boolean;
     onHide: () => void;
-    onCreated: () => void; // Para avisarle al padre que recargue la lista
+    onCreated: () => void; // To notify the father to reload the list
 }
 
 export default function CategoryModal({ show, onHide, onCreated }: Props) {
@@ -19,11 +19,11 @@ export default function CategoryModal({ show, onHide, onCreated }: Props) {
         setIsSubmitting(true);
         try {
             await categoryService.create({ name, description });
-            // Limpieza
+            // Clean
             setName("");
             setDescription("");
-            onCreated(); // Avisamos al padre
-            onHide();    // Cerramos
+            onCreated(); // Notify the parent
+            onHide();    // Close
         } catch (error) {
             console.error(error);
             NotificationService.showError('Error creating category', 'Make sure the name is unique.');

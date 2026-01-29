@@ -17,16 +17,16 @@ export default function NoteModal({ show, onHide, onSubmit, noteToEdit, availabl
     const [selectedCategoryIds, setSelectedCategoryIds] = useState<number[]>([]);
     const [isSubmitting, setIsSubmitting] = useState(false);
 
-    // Efecto para cargar datos si estamos editando
+    // Effect for loading data if we are editing
     useEffect(() => {
         if (show) {
             if (noteToEdit) {
                 setTitle(noteToEdit.title);
                 setContent(noteToEdit.content);
-                // Extraemos solo los IDs de las categorías que ya tiene la nota
+                // Extract only the IDs of the categories that the note already has
                 setSelectedCategoryIds(noteToEdit.categories.map(c => c.id));
             } else {
-                // Reset si es nueva nota
+                // Reset if it's a new note
                 setTitle("");
                 setContent("");
                 setSelectedCategoryIds([]);
@@ -51,7 +51,7 @@ export default function NoteModal({ show, onHide, onSubmit, noteToEdit, availabl
                 title,
                 content,
                 archived: noteToEdit ? noteToEdit.archived : false,
-                categoryIds: selectedCategoryIds // ¡Esto es lo que tu backend espera!
+                categoryIds: selectedCategoryIds // This is what the backend expects!
             };
 
             await onSubmit(dto, noteToEdit?.id);
