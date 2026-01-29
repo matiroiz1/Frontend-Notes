@@ -1,39 +1,71 @@
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { AuthProvider, useAuth } from "./context/AuthContext";
 import Navbar from "./layouts/Navbar";
 import HomePage from "./pages/HomePage";
-import CategoriesPage from "./pages/CategoriesPage.tsx"; // Vamos a crear este en el siguiente paso
+import CategoriesPage from "./pages/CategoriesPage";
+import LoginPage from "./pages/LoginPage";
+import RegisterPage from "./pages/RegisterPage";
+import type { JSX } from "react";
 
-function App() {
+// Component to protect routes
+function ProtectedRoute({ children }: { children: JSX.Element }) {
+  const { isAuthenticated } = useAuth();
+  if (!isAuthenticated) {
+    return <Navigate to="/login" replace />;
+  }
+  return children;
+}
+
+function AppContent() {
+  const { isAuthenticated } = useAuth();
+
   return (
-    <BrowserRouter>
-      {/* El Navbar siempre visible arriba */}
-      <Navbar />
-      
-      {/* Aquí cambia el contenido según la URL */}
+    <>
+      {isAuthenticated && <Navbar />}
+
       <Routes>
-        {/* Ruta Raíz: Notas Activas */}
+        <Route path="/login" element={<LoginPage />} />
+        <Route path="/register" element={<RegisterPage />} />
+
         <Route 
-            path="/" 
-            element={<HomePage isArchivedView={false} />} 
+          path="/" 
+          element={
+            <ProtectedRoute>
+              <HomePage isArchivedView={false} />
+            </ProtectedRoute>
+          } 
+        />
+        
+        <Route 
+          path="/archived" 
+          element={
+            <ProtectedRoute>
+              <HomePage isArchivedView={true} />
+            </ProtectedRoute>
+          } 
+        />
+        
+        <Route 
+          path="/categories" 
+          element={
+            <ProtectedRoute>
+              <CategoriesPage />
+            </ProtectedRoute>
+          } 
         />
 
-        {/* Ruta Archivadas: Notas Archivadas (Reusa el componente) */}
-        <Route 
-            path="/archived" 
-            element={<HomePage isArchivedView={true} />} 
-        />
-
-        {/* Ruta Categorías: Gestión CRUD de categorías */}
-        <Route 
-            path="/categories" 
-            element={<CategoriesPage />} 
-        />
-
-        {/* Catch-all: Cualquier ruta rara te manda al Home */}
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
-    </BrowserRouter>
+    </>
   );
 }
 
-export default App;
+export default function App() {
+  return (
+    <AuthProvider>
+      <BrowserRouter>
+        <AppContent />
+      </BrowserRouter>
+    </AuthProvider>
+  );
+}

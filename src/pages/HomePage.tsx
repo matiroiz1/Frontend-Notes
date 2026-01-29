@@ -9,17 +9,17 @@ import NotificationService from "../utils/notificationsService";
 import type { Note, Category, NoteDTO } from "../types";
 
 interface Props {
-    isArchivedView?: boolean; // Para saber si estamos en /archived o en /
+    isArchivedView?: boolean; // To know if we are in /archived or in /
 }
 
 export default function HomePage({ isArchivedView = false }: Props) {
-    // --- ESTADOS ---
+    // --- STATES ---
     const [notes, setNotes] = useState<Note[]>([]);
     const [categories, setCategories] = useState<Category[]>([]);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
 
-    // Filtros
+    // Filters
     const [selectedCategoryId, setSelectedCategoryId] = useState<number | null>(null);
 
     // Modal
@@ -30,25 +30,25 @@ export default function HomePage({ isArchivedView = false }: Props) {
     const [showDetailModal, setShowDetailModal] = useState(false);
     const [noteToView, setNoteToView] = useState<Note | null>(null);
 
-    // --- CARGA DE DATOS ---
+    // --- DATA LOADING ---
     const loadData = async () => {
         setIsLoading(true);
         setError(null);
         try {
-            // 1. Cargamos categorías (para el filtro y el modal)
+            // 1. Load categories (for filter and modal)
             const catsData = await categoryService.getAll();
             setCategories(catsData);
 
-            // 2. Cargamos notas según la vista
+            // 2. Load notes according to view
             let notesData: Note[] = [];
 
             if (selectedCategoryId) {
-                // Si hay filtro de categoría, usamos el endpoint de filtro
+                // If there is category filter, use the filter endpoint
                 notesData = await noteService.filterByCategory(selectedCategoryId);
-                // Filtramos manualmente si es archivado o no (si el back no filtra eso en este endpoint)
+                // Manually filter if archived or not (if backend doesn't filter this in this endpoint)
                 notesData = notesData.filter(n => n.archived === isArchivedView);
             } else {
-                // Si no hay filtro, carga normal
+                // If no filter, normal load
                 notesData = isArchivedView 
                     ? await noteService.getArchived() 
                     : await noteService.getActive();
@@ -63,20 +63,20 @@ export default function HomePage({ isArchivedView = false }: Props) {
         }
     };
 
-    // Recargar cuando cambia la vista o el filtro
+    // Reload when view or filter changes
     useEffect(() => {
         loadData();
     }, [isArchivedView, selectedCategoryId]);
 
-    // --- MANEJADORES DE ACCIONES ---
+    // --- ACTION HANDLERS ---
 
     const handleCreateClick = () => {
-        setNoteToEdit(null); // NULL = Modo Crear
+        setNoteToEdit(null); // NULL = Create Mode
         setShowModal(true);
     };
 
     const handleEditClick = (note: Note) => {
-        setNoteToEdit(note); // OBJETO = Modo Editar
+        setNoteToEdit(note); // OBJECT = Edit Mode
         setShowModal(true);
     };
 
@@ -91,7 +91,7 @@ export default function HomePage({ isArchivedView = false }: Props) {
         try {
             await noteService.delete(id);
             NotificationService.success('Note deleted successfully');
-            loadData(); // Recargamos la lista
+            loadData(); // Reload list
         } catch (e) { 
             NotificationService.error('Error deleting note');
         }
@@ -101,42 +101,42 @@ export default function HomePage({ isArchivedView = false }: Props) {
         try {
             await noteService.toggleArchive(id);
             NotificationService.success('Note archive status updated');
-            loadData(); // La nota desaparecerá o aparecerá según la vista
+            loadData(); // Note will disappear or appear according to view
         } catch (e) { 
             NotificationService.error('Error updating archive status');
         }
     };
 
-    // --- AQUÍ ESTÁ LA LÓGICA DUAL DEL MODAL ---
+    // --- HERE IS THE DUAL MODAL LOGIC ---
     const handleModalSubmit = async (noteData: NoteDTO, id?: number) => {
         try {
             if (id) {
-                // Si hay ID -> UPDATE
+                // If there is ID -> UPDATE
                 await noteService.update(id, noteData);
                 NotificationService.success('Note updated successfully');
             } else {
-                // Si no hay ID -> CREATE
+                // If there is no ID -> CREATE
                 await noteService.create(noteData);
                 NotificationService.success('Note created successfully');
             }
-            loadData(); // Refrescamos la lista para ver los cambios
+            loadData(); // Refresh list to see changes
         } catch (err) {
             console.error("Error saving:", err);
             NotificationService.error('Could not save the note');
-            throw err; // El modal captura esto para dejar de cargar
+            throw err; // Modal captures this to stop loading
         }
     };
 
     return (
         <Container className="py-4">
-            {/* Cabecera y Filtros */}
+            {/* Header and Filters */}
             <div className="d-flex flex-column flex-md-row justify-content-between align-items-center mb-5 gap-3">
                 <h1 className="mb-0 fw-bold text-secondary">
                     {isArchivedView ? "Archived Notes" : "My Notes"}
                 </h1>
 
                 <div className="d-flex gap-3 align-items-center" style={{ minWidth: '400px' }}>
-                    {/* Select de Filtro */}
+                    {/* Filter Select */}
                     <Form.Select 
                         value={selectedCategoryId || ""} 
                         onChange={(e) => setSelectedCategoryId(e.target.value ? Number(e.target.value) : null)}
@@ -162,7 +162,7 @@ export default function HomePage({ isArchivedView = false }: Props) {
                 </div>
             </div>
 
-            {/* Manejo de errores y carga */}
+            {/* Error handling and loading */}
             {error && <Alert variant="danger">{error}</Alert>}
             
             {isLoading ? (
@@ -192,7 +192,7 @@ export default function HomePage({ isArchivedView = false }: Props) {
                 </Row>
             )}
 
-            {/* El Modal Inteligente */}
+            {/* The Smart Modal */}
             <NoteModal 
                 show={showModal}
                 onHide={() => setShowModal(false)}
@@ -201,7 +201,7 @@ export default function HomePage({ isArchivedView = false }: Props) {
                 availableCategories={categories}
             />
 
-            {/* Modal de Vista Detallada */}
+            {/* Detail View Modal */}
             <NoteDetailModal
                 show={showDetailModal}
                 onHide={() => setShowDetailModal(false)}

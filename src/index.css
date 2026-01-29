@@ -1,4 +1,4 @@
-/* Importamos Bootstrap primero */
+/* Import Bootstrap first */
 @import 'bootstrap/dist/css/bootstrap.min.css';
 @import 'bootstrap-icons/font/bootstrap-icons.css';
 
@@ -15,28 +15,6 @@
   --shadow-lg: 0 10px 15px rgba(0,0,0,0.1), 0 4px 6px rgba(0,0,0,0.05);
 }
 
-[data-theme="dark"] {
-  --primary-color: #818cf8;
-  --bg-secondary: #1e293b;
-  --text-secondary: #cbd5e1;
-  --text-muted: #94a3b8;
-  --border-color: #334155;
-  --bg-body: #0f172a;
-  body { background-color: #0f172a; color: #f1f5f9; }
-  .card, .modal-content { background-color: #1e293b; color: #f1f5f9; border-color: #334155; }
-}
-
-[data-theme="cream"] {
-  --primary-color: #d97706;
-  --bg-secondary: #fef3c7;
-  --text-secondary: #92400e;
-  --text-muted: #b45309;
-  --border-color: #fbbf24;
-  --bg-body: #fffbeb;
-  body { background-color: #fffbeb; color: #451a03; }
-  .card, .modal-content { background-color: #fef3c7; color: #451a03; border-color: #fbbf24; }
-}
-
 body {
   background-color: var(--bg-body);
   transition: background-color 0.3s ease;
@@ -44,7 +22,7 @@ body {
   line-height: 1.6;
 }
 
-/* Estilos minimalistas para cards */
+/* Minimalist card styles */
 .card {
   border-radius: var(--border-radius) !important;
   border: 1px solid var(--border-color) !important;
@@ -58,7 +36,7 @@ body {
   transform: translateY(-4px) !important;
 }
 
-/* Botones minimalistas */
+/* Minimalist buttons */
 .btn {
   border-radius: 12px !important;
   font-weight: 500 !important;
@@ -81,7 +59,7 @@ body {
   color: white !important;
 }
 
-/* Modales minimalistas */
+/* Minimalist modals */
 .modal-content {
   border-radius: var(--border-radius) !important;
   border: none !important;
@@ -102,7 +80,7 @@ body {
   padding: 16px 24px !important;
 }
 
-/* Formularios */
+/* Forms */
 .form-control {
   border-radius: 12px !important;
   border: 2px solid var(--border-color) !important;
@@ -142,7 +120,7 @@ body {
   justify-content: flex-start;
 }
 
-/* Scrollbar bonito */
+/* Custom scrollbar */
 ::-webkit-scrollbar { width: 8px; }
 ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
 ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }

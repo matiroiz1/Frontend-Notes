@@ -1,3 +1,23 @@
+export interface User {
+    username: string;
+    token?: string;
+}
+
+export interface AuthResponse {
+    token: string;
+    username: string;
+}
+
+export interface LoginRequest {
+    username: string;
+    password:   string;
+}
+
+export interface RegisterRequest {
+    username: string;
+    password: string;
+}
+
 export interface Category {
     id: number;
     name: string;
